@@ -39,14 +39,14 @@ footer{background:#222;color:#fff;text-align:center;padding:14px;font-size:13px;
 </style>
 </head>
 <body>
-<header><h1>AYMAN MARKET</h1><p>محلات الواحة - فوربرنقا</p></header>
+<header><h1>AYMAN MARKET</h1><p>محلات الواحة - فوربرنقا - السودان</p></header>
 
 <div class="founder">
 <img src="ayman.jpg" alt="أيمن محمد صالح يعقوب" onerror="this.src='https://via.placeholder.com/200x200?text=AYMAN'">
 <h2>أيمن محمد صالح يعقوب</h2>
 <div class="role">مؤسس ومنشئ AYMAN MARKET - محلات الواحة</div>
 <p>
-أنا <b>أيمن محمد صالح يعقوب</b>، مولود في <b>فوربرنقا - تشاد</b>.
+أنا <b>أيمن محمد صالح يعقوب</b>، مولود في <b>فوربرنقا - السودان</b>.
 مؤسس ومنشئ متجر AYMAN MARKET ومحلات الواحة.
 بدأت رحلتي في التجارة من سوق فوربرنقا، وهدفي أجيب لزبائني بضاعة أصلية ونضيفة وبسعر مناسب.
 في متجري حتلقى الولاعات الأصلية - السوداء والذهبية والصغيرة - وكل البضاعة الحقيقية، وأي طلب بيوصلك بالواتساب طوالي.
@@ -54,11 +54,12 @@ footer{background:#222;color:#fff;text-align:center;padding:14px;font-size:13px;
 </p>
 <div class="dates">
 <div><b>الاسم الكامل</b>أيمن محمد صالح يعقوب</div>
-<div><b>مكان الميلاد</b>فوربرنقا - تشاد</div>
+<div><b>مكان الميلاد</b>فوربرنقا - السودان</div>
+<div><b>الدولة</b>السودان</div>
 <div><b>تاريخ إنشاء المتجر</b>05 نوفمبر 2026</div>
 <div><b>تاريخ الانضمام</b>05 نوفمبر 2026</div>
-<div><b>وقت الإنشاء</b>05:00 مساءً - بتوقيت تشاد</div>
-<div><b>الموقع</b>فوربرنقا - تشاد</div>
+<div><b>وقت الإنشاء</b>05:00 مساءً - بتوقيت السودان</div>
+<div><b>الموقع</b>فوربرنقا - السودان</div>
 </div>
 <button onclick="window.open('https://wa.me/23567651851?text='+encodeURIComponent('السلام عليكم يا أيمن، شفت متجرك'),'_blank')" style="margin-top:14px;padding:12px 22px;border:none;border-radius:10px;background:#25D366;color:#fff;font-size:16px;cursor:pointer">تواصل مع المؤسس بالواتساب</button>
 </div>
@@ -71,59 +72,4 @@ footer{background:#222;color:#fff;text-align:center;padding:14px;font-size:13px;
 <h3>أضف بضاعتك</h3>
 <input id="pname" placeholder="اسم المنتج">
 <input id="pprice" type="number" placeholder="السعر">
-<input id="pqty" type="number" placeholder="الكمية">
-<select id="pcat"><option>ولاعات</option><option>مواد غذائية</option><option>منظفات</option><option>بقالة</option><option>أخرى</option></select>
-<input id="pimg" placeholder="رابط صورة (اختياري)">
-<button class="save" onclick="addProduct()">حفظ المنتج</button>
-<button class="clear" onclick="clearAll()">مسح كل المنتجات</button>
-</div>
-
-<footer>AYMAN MARKET © 2026 | تم الإنشاء في 05 نوفمبر 2026 - فوربرنقا | المؤسس: أيمن محمد صالح يعقوب</footer>
-
-<script>
-let defaultProducts=[
-{name:"ولاعة سوداء - أم كورة حديد",price:4000,qty:20,cat:"ولاعات",img:""},
-{name:"ولاعة سوداء - KENT",price:4000,qty:20,cat:"ولاعات",img:""},
-{name:"ولاعة سوداء سادة طويلة",price:4000,qty:20,cat:"ولاعات",img:""},
-{name:"ولاعة ذهبية - أبو سيفين سمك",price:4000,qty:20,cat:"ولاعات",img:""},
-{name:"ولاعة ذهبية - كلاش M",price:4000,qty:20,cat:"ولاعات",img:""},
-{name:"ولاعة ذهبية سادة لماعة",price:4000,qty:20,cat:"ولاعات",img:""},
-{name:"ولاعة صغيرة - ORIS",price:1000,qty:50,cat:"ولاعات",img:""},
-{name:"ولاعة صغيرة - ZAKI",price:1000,qty:50,cat:"ولاعات",img:""}
-];
-let products = JSON.parse(localStorage.getItem('ayman_products')||'null');
-if(!products){products=defaultProducts;localStorage.setItem('ayman_products',JSON.stringify(products));}
-let cats = ['الكل','ولاعات','مواد غذائية','منظفات','بقالة','أخرى'];
-let activeCat='الكل';
-function renderCats(){document.getElementById('cats').innerHTML=cats.map(c=>`<button class="${c===activeCat?'active':''}" onclick="setCat('${c}')">${c}</button>`).join('');}
-function setCat(c){activeCat=c;renderCats();render();}
-function render(){
-let q=document.getElementById('search').value||'';
-let list=products.filter(p=>(activeCat==='الكل'||p.cat===activeCat)&&p.name.includes(q));
-document.getElementById('grid').innerHTML=list.length?list.map((p,i)=>`
-<div class="card">
-<img src="${p.img||'https://via.placeholder.com/300x200?text='+encodeURIComponent(p.name)}">
-<div class="info"><h3>${p.name}</h3><div>الكمية: ${p.qty}</div><div class="price">${p.price} جنيه</div>
-<button onclick="order('${p.name}','${p.price}')">اطلب بالواتساب</button></div></div>`).join(''):'<p style="grid-column:1/-1;text-align:center;padding:20px">لا توجد منتجات</p>';
-}
-function addProduct(){
-let name=document.getElementById('pname').value.trim();
-let price=document.getElementById('pprice').value;
-let qty=document.getElementById('pqty').value||1;
-let cat=document.getElementById('pcat').value;
-let img=document.getElementById('pimg').value;
-if(!name||!price){alert('اكتب الاسم والسعر');return;}
-products.push({name,price,qty,cat,img});
-localStorage.setItem('ayman_products',JSON.stringify(products));
-render();alert('تم حفظ المنتج');
-}
-function clearAll(){if(confirm('تمسح كل المنتجات؟')){products=[];localStorage.removeItem('ayman_products');render();}}
-function order(name,price){
-let msg=encodeURIComponent('السلام عليكم، داير أطلب: '+name+' - السعر: '+price+' جنيه - من متجر AYMAN MARKET');
-window.open(`https://wa.me/23567651851?text=${msg}`, '_blank');
-}
-document.getElementById('search').addEventListener('input',render);
-renderCats();render();
-</script>
-</body>
-</html>
+<input id="pqty" type="number" placeholder="ال

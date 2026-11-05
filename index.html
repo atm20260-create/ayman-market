@@ -3,60 +3,120 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AYMAN MARKET - سوق فوربرنقا</title>
+<title>AYMAN MARKET - فوربرنقا</title>
 <style>
-body{font-family:Arial;background:#f2f2f2;margin:0}
-header{background:#0b7a43;color:#fff;padding:15px;text-align:center;position:sticky;top:0}
-header h1{margin:0;font-size:24px}
-header p{margin:5px 0 0;font-size:13px}
-.search{padding:12px;text-align:center}
-.search input{width:90%;padding:12px;border-radius:10px;border:1px solid #ccc;font-size:15px}
-.cats{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:5px 10px}
-.cats button{background:#fff;border:1px solid #ddd;padding:8px 14px;border-radius:20px;cursor:pointer}
-.cats button.active{background:#0b7a43;color:#fff}
-.products{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px}
-.card{background:#fff;border-radius:12px;padding:10px;text-align:center}
-.card img{width:100%;height:120px;object-fit:cover;border-radius:10px}
-.price{color:#0b7a43;font-weight:bold;font-size:16px}
-.seller{font-size:12px;color:#666}
-.btn{background:#0b7a43;color:#fff;border:none;padding:10px;width:100%;border-radius:8px;margin-top:5px;font-size:14px}
-#cart{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:2px solid #0b7a43;padding:12px;text-align:center;box-shadow:0 -2px 10px rgba(0,0,0,.1)}
-#cart button{background:#ff8c00;color:#fff;border:none;padding:12px 25px;border-radius:10px;font-size:16px}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Tahoma,Arial}
+body{background:#f5f5f5}
+header{background:#0b7a3e;color:#fff;padding:15px;text-align:center;position:sticky;top:0;z-index:10}
+header h1{font-size:24px}
+header p{font-size:13px;opacity:.9}
+.search{padding:12px}
+.search input{width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;font-size:16px}
+.cats{display:flex;gap:8px;overflow:auto;padding:0 12px 10px}
+.cats button{white-space:nowrap;padding:8px 14px;border:none;border-radius:20px;background:#fff;cursor:pointer}
+.cats button.active{background:#0b7a3e;color:#fff}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:12px}
+.card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.card img{width:100%;height:140px;object-fit:cover;background:#eee}
+.card .info{padding:10px}
+.card h3{font-size:15px;margin-bottom:5px}
+.price{color:#0b7a3e;font-weight:bold;font-size:16px}
+.stock{font-size:12px;color:#666}
+.btn{width:100%;margin-top:8px;padding:10px;background:#25D366;border:none;border-radius:8px;font-weight:bold;cursor:pointer}
+.empty{text-align:center;padding:40px;color:#888}
+.admin{background:#fff;margin:12px;padding:12px;border-radius:12px}
+.admin input{width:100%;padding:10px;margin:5px 0;border:1px solid #ddd;border-radius:8px}
+.admin button{width:100%;padding:12px;background:#0b7a3e;color:#fff;border:none;border-radius:8px;font-weight:bold}
+footer{text-align:center;padding:15px;color:#888;font-size:13px}
 </style>
 </head>
 <body>
-<header><h1>AYMAN MARKET</h1><p>سوق فوربرنقا الإلكتروني | اطلب أونلاين واستلم من محل التاجر - الدفع كاش</p></header>
-<div class="search"><input id="search" onkeyup="filter()" placeholder="ابحث عن سكر، زيت، تلفون..."></div>
-<div class="cats">
-<button class="active" onclick="show('all',this)">الكل</button>
-<button onclick="show('food',this)">مواد غذائية</button>
-<button onclick="show('elec',this)">إلكترونيات</button>
-<button onclick="show('cloth',this)">ملابس</button>
+
+<header>
+<h1>AYMAN MARKET</h1>
+<p>محلات الواحة - فوربرنقا | اطلب واستلم من المحل Click & Collect</p>
+</header>
+
+<div class="search"><input id="search" placeholder="فتش عن منتج موجود..." oninput="render()"></div>
+
+<div class="cats" id="cats"></div>
+<div class="grid" id="grid"></div>
+
+<div class="admin">
+<h3>➕ أضف بضاعتك الحقيقية فقط</h3>
+<p style="font-size:12px;color:#666">أضف هنا بس المنتج الموجود فعلا عندك في المحل. لو خلصت كميتو حيختفي براهو.</p>
+<input id="pName" placeholder="اسم المنتج - مثال: سكر 10 كيلو">
+<input id="pPrice" type="number" placeholder="السعر بالجنيه - مثال: 45000">
+<input id="pQty" type="number" placeholder="الكمية الموجودة - مثال: 20">
+<input id="pCat" placeholder="التصنيف - مثال: مواد غذائية">
+<input id="pImg" placeholder="رابط صورة المنتج (اختياري)">
+<button onclick="addProduct()">حفظ المنتج</button>
+<button onclick="clearAll()" style="background:#c00;margin-top:8px">مسح كل المنتجات القديمة</button>
 </div>
-<div class="products" id="products"></div>
-<div id="cart">السلة: <span id="count">0</span> منتج | الإجمالي: <span id="total">0</span> ج.س<br><br><button onclick="order()">تأكيد الطلب - استلام من المحل</button></div>
+
+<footer>واتساب الطلبات: أضف رقمك في الكود | فوربرنقا</footer>
+
 <script>
-let products=[
-{name:"سكر 10 كيلو",price:45000,cat:"food",seller:"دكان النور - فوربرنقا",img:"https://via.placeholder.com/300x200?text=Sugar"},
-{name:"زيت 4 لتر",price:38000,cat:"food",seller:"دكان النور - فوربرنقا",img:"https://via.placeholder.com/300x200?text=Oil"},
-{name:"تلفون سامسونج",price:320000,cat:"elec",seller:"ستار فون - فوربرنقا",img:"https://via.placeholder.com/300x200?text=Phone"},
-{name:"سماعة بلوتوث",price:25000,cat:"elec",seller:"ستار فون - فوربرنقا",img:"https://via.placeholder.com/300x200?text=Earphone"},
-{name:"جلابية رجالي",price:55000,cat:"cloth",seller:"مشغل الأمل - فوربرنقا",img:"https://via.placeholder.com/300x200?text=Jalabiya"},
-{name:"تيشيرت",price:18000,cat:"cloth",seller:"مشغل الأمل - فوربرنقا",img:"https://via.placeholder.com/300x200?text=Tshirt"},
-];
-let cart=[],filterCat="all";
+// *** مهم: هنا مافي أي منتجات وهمية ***
+// القائمة بتبدأ فاضية، وانت بتملاها ببضاعتك الحقيقية بس
+let products = JSON.parse(localStorage.getItem('ayman_products') || '[]');
+let activeCat = 'الكل';
+
+function save(){ localStorage.setItem('ayman_products', JSON.stringify(products)); }
+
 function render(){
-let q=document.getElementById("search").value.toLowerCase();
-let html="";
-products.filter(p=>(filterCat=="all"||p.cat==filterCat)&&p.name.includes(q)).forEach((p,i)=>{
-html+=`<div class="card"><img src="${p.img}"><h3>${p.name}</h3><p class="seller">${p.seller}</p><p class="price">${p.price.toLocaleString()} ج.س</p><button class="btn" onclick="add(${products.indexOf(p)})">أضف للسلة</button></div>`;
-});
-document.getElementById("products").innerHTML=html;
+  let q = document.getElementById('search').value.toLowerCase();
+  // القاعدة الذهبية: اعرض بس الموجود - الكمية أكبر من صفر
+  let list = products.filter(p => p.qty > 0);
+  if(q) list = list.filter(p => p.name.includes(q));
+  if(activeCat !== 'الكل') list = list.filter(p => p.cat === activeCat);
+
+  let cats = ['الكل', ...new Set(products.filter(p=>p.qty>0).map(p=>p.cat))];
+  document.getElementById('cats').innerHTML = cats.map(c=>`<button class="${c===activeCat?'active':''}" onclick="setCat('${c}')">${c}</button>`).join('');
+
+  let grid = document.getElementById('grid');
+  if(list.length===0){
+    grid.innerHTML = `<div class="empty">مافي منتجات معروضة هسي.<br>أضف بضاعتك الحقيقية من تحت.<br>ما بنعرض منتج ما موجود.</div>`;
+    return;
+  }
+  grid.innerHTML = list.map((p,i)=>`
+    <div class="card">
+      <img src="${p.img || 'https://via.placeholder.com/300x140?text=AYMAN+MARKET'}">
+      <div class="info">
+        <h3>${p.name}</h3>
+        <div class="price">${p.price.toLocaleString()} جنيه</div>
+        <div class="stock">متوفر: ${p.qty} | ${p.cat}</div>
+        <button class="btn" onclick="order('${p.name}','${p.price}')">اطلب بالواتساب 🟢</button>
+        <button onclick="del(${products.indexOf(p)})" style="width:100%;margin-top:5px;background:none;border:none;color:#c00;cursor:pointer">حذف / خلصت الكمية</button>
+      </div>
+    </div>`).join('');
 }
-function show(c,el){filterCat=c;document.querySelectorAll(".cats button").forEach(b=>b.classList.remove("active"));el.classList.add("active");render();}
-function filter(){render();}
-function add(i){cart.push(products[i]);let t=cart.reduce((s,p)=>s+p.price,0);document.getElementById("count").innerText=cart.length;document.getElementById("total").innerText=t.toLocaleString();alert("تمت الإضافة للسلة");}
-function order(){if(cart.length==0){alert("السلة فارغة");return;}let num="AM-"+Math.floor(Math.random()*90000+10000);let t=cart.reduce((s,p)=>s+p.price,0);alert("تم استلام طلبك!\\nرقم الطلب: "+num+"\\nالإجمالي: "+t.toLocaleString()+" ج.س\\nاذهب لمحل التاجر وادفع كاش واستلم.");cart=[];document.getElementById("count").innerText=0;document.getElementById("total").innerText=0;}
+
+function setCat(c){ activeCat=c; render(); }
+
+function addProduct(){
+  let name=document.getElementById('pName').value.trim();
+  let price=parseInt(document.getElementById('pPrice').value);
+  let qty=parseInt(document.getElementById('pQty').value);
+  let cat=document.getElementById('pCat').value.trim() || 'عام';
+  let img=document.getElementById('pImg').value.trim();
+  if(!name || !price || isNaN(qty)){ alert('اكتب الاسم والسعر والكمية'); return; }
+  if(qty<=0){ alert('الكمية لازم تكون أكبر من صفر عشان يظهر'); return; }
+  products.push({name,price,qty,cat,img});
+  save(); render();
+  document.getElementById('pName').value=''; document.getElementById('pPrice').value=''; document.getElementById('pQty').value=''; document.getElementById('pCat').value=''; document.getElementById('pImg').value='';
+  alert('اتحفظ ✅');
+}
+
+function del(idx){ if(confirm('تحذف المنتج ده؟')){ products.splice(idx,1); save(); render(); } }
+function clearAll(){ if(confirm('تمسح كل المنتجات القديمة؟')){ products=[]; save(); render(); } }
+
+function order(name,price){
+  let msg = encodeURIComponent(`سلام عليكم، داير أطلب من AYMAN MARKET:\n${name} - ${price} جنيه\nالاستلام: من المحل Click & Collect`);
+  // غير الرقم ده برقمك الحقيقي: 2499XXXXXXXX
+  window.open(`https://wa.me/249900000000?text=${msg}`, '_blank');
+}
+
 render();
 </script>
 </body>

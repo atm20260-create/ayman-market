@@ -17,7 +17,8 @@ header p{font-size:13px;color:#ccc;margin-top:6px}
 .cats button.active{background:#111;color:#d4af37}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:12px}
 .card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 3px 12px rgba(0,0,0,.08)}
-.card img{width:100%;height:165px;object-fit:cover;background:#f0f0f0}
+.card .imgbox{width:100%;height:165px;background:#eee;display:flex;align-items:center;justify-content:center;font-size:40px;overflow:hidden}
+.card .imgbox img{width:100%;height:100%;object-fit:cover}
 .card .info{padding:12px}
 .card h3{font-size:15px;line-height:1.4;min-height:42px}
 .card .price{color:#b8860b;font-weight:900;margin:6px 0;font-size:18px}
@@ -35,22 +36,24 @@ footer{background:#000;color:#aaa;text-align:center;padding:14px;font-size:12px}
 <div class="search"><input id="search" placeholder="ابحث هنا..." oninput="render()"></div>
 <div class="cats" id="cats"></div>
 <div class="grid" id="grid"></div>
-<div class="about"><b>AYMAN MARKETING - محلات الواحة</b><br>متجر من فوربرنقا - السودان<br><b>المؤسس: أيمن محمد صالح يعقوب</b></div>
+<div class="about"><b>AYMAN MARKETING - محلات الواحة</b><br>متجر من فوربرنقا - السودان<br><b>المؤسس: أيمن محمد صالح يعقوب - 67651851</b></div>
 <footer>AYMAN MARKETING © 2026 | فوربرنقا - السودان</footer>
 <script>
+var numanPhone = "+235 85152670";
+var aymanPhone = "+235 67651851";
 var products=[
-{name:"زينة كفر ركشة وردية - نجمة",price:70000,cat:"زينة كفرات الركشات",img:"wheel-pink.jpg",owner:"النعمان",phone:"+235 85152670",cash:1},
-{name:"زينة كفر ركشة خضراء - نجمة",price:70000,cat:"زينة كفرات الركشات",img:"wheel-green.jpg",owner:"النعمان",phone:"+235 85152670",cash:1},
-{name:"زينة كفرات ركشة - طقم وردي + أخضر",price:140000,cat:"زينة كفرات الركشات",img:"wheel-both.jpg",owner:"النعمان",phone:"+235 85152670",cash:1},
-{name:"زينة كفر ركشة - من الخلف",price:70000,cat:"زينة كفرات الركشات",img:"wheel-back.jpg",owner:"النعمان",phone:"+235 85152670",cash:1},
-{name:"ولاعة سوداء - أم كورة حديد",price:4000,cat:"ولاعات",img:"black1.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:0},
-{name:"ولاعة سوداء - KENT",price:4000,cat:"ولاعات",img:"black2.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:0},
-{name:"ولاعة سوداء سادة طويلة",price:4000,cat:"ولاعات",img:"black3.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:0},
-{name:"ولاعة ذهبية - أبو سيفين سمك",price:4000,cat:"ولاعات",img:"gold1.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:0},
-{name:"ولاعة ذهبية - كلاش M",price:4000,cat:"ولاعات",img:"gold2.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:0},
-{name:"ولاعة ذهبية سادة لماعة",price:4000,cat:"ولاعات",img:"gold3.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:0},
-{name:"ولاعة صغيرة - ORIS",price:1000,cat:"ولاعات",img:"small1.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:0},
-{name:"ولاعة صغيرة - ZAKI",price:1000,cat:"ولاعات",img:"small2.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:0}
+{name:"زينة كفر ركشة وردية - نجمة",price:70000,cat:"زينة كفرات الركشات",img:"wheel-pink.jpg",emoji:"🌸",owner:"النعمان",phone:numanPhone,cash:1},
+{name:"زينة كفر ركشة خضراء - نجمة",price:70000,cat:"زينة كفرات الركشات",img:"wheel-green.jpg",emoji:"🟢",owner:"النعمان",phone:numanPhone,cash:1},
+{name:"زينة كفرات ركشة - طقم وردي + أخضر",price:140000,cat:"زينة كفرات الركشات",img:"wheel-both.jpg",emoji:"🌸🟢",owner:"النعمان",phone:numanPhone,cash:1},
+{name:"زينة كفر ركشة - من الخلف",price:70000,cat:"زينة كفرات الركشات",img:"wheel-back.jpg",emoji:"🛞",owner:"النعمان",phone:numanPhone,cash:1},
+{name:"ولاعة سوداء - أم كورة حديد",price:4000,cat:"ولاعات",img:"black1.jpg",emoji:"🔥",owner:"أيمن محمد صالح يعقوب",phone:aymanPhone,cash:0},
+{name:"ولاعة سوداء - KENT",price:4000,cat:"ولاعات",img:"black2.jpg",emoji:"🔥",owner:"أيمن محمد صالح يعقوب",phone:aymanPhone,cash:0},
+{name:"ولاعة سوداء سادة طويلة",price:4000,cat:"ولاعات",img:"black3.jpg",emoji:"🔥",owner:"أيمن محمد صالح يعقوب",phone:aymanPhone,cash:0},
+{name:"ولاعة ذهبية - أبو سيفين سمك",price:4000,cat:"ولاعات",img:"gold1.jpg",emoji:"✨",owner:"أيمن محمد صالح يعقوب",phone:aymanPhone,cash:0},
+{name:"ولاعة ذهبية - كلاش M",price:4000,cat:"ولاعات",img:"gold2.jpg",emoji:"✨",owner:"أيمن محمد صالح يعقوب",phone:aymanPhone,cash:0},
+{name:"ولاعة ذهبية سادة لماعة",price:4000,cat:"ولاعات",img:"gold3.jpg",emoji:"✨",owner:"أيمن محمد صالح يعقوب",phone:aymanPhone,cash:0},
+{name:"ولاعة صغيرة - ORIS",price:1000,cat:"ولاعات",img:"small1.jpg",emoji:"🔥",owner:"أيمن محمد صالح يعقوب",phone:aymanPhone,cash:0},
+{name:"ولاعة صغيرة - ZAKI",price:1000,cat:"ولاعات",img:"small2.jpg",emoji:"🔥",owner:"أيمن محمد صالح يعقوب",phone:aymanPhone,cash:0}
 ];
 var cats=['الكل','زينة كفرات الركشات','ولاعات'];
 var activeCat='الكل';
@@ -61,7 +64,7 @@ function render(){
 var q=document.getElementById('search').value||'';
 var list=products.filter(function(p){return (activeCat==='الكل'||p.cat===activeCat) && p.name.indexOf(q)>-1;});
 document.getElementById('grid').innerHTML=list.map(function(p){
-return '<div class="card"><img src="'+p.img+'" onerror="this.style.display=\'none\'"><div class="info"><h3>'+p.name+'</h3><div class="price">'+p.price+' جنيه</div>'+(p.cash?'<div class="cash">💵 كاش فقط - ما بنكك</div>':'')+'<div class="owner">👤 <b>'+p.owner+'</b><br>📞 <span dir="ltr">'+p.phone+'</span></div><button onclick="order(\''+p.name+'\',\''+p.price+'\',\''+p.owner+'\',\''+p.phone+'\')">اطلب بالواتساب</button><button class="call" onclick="window.location.href=\'tel:'+cleanPhone(p.phone)+'\'">📞 اتصل بـ '+p.owner+'</button></div></div>';
+return '<div class="card"><div class="imgbox"><img src="'+p.img+'" onerror="this.remove()" alt="">'+p.emoji+'</div><div class="info"><h3>'+p.name+'</h3><div class="price">'+p.price+' جنيه</div>'+(p.cash?'<div class="cash">💵 كاش فقط - ما بنكك</div>':'')+'<div class="owner">👤 <b>'+p.owner+'</b><br>📞 <span dir="ltr">'+p.phone+'</span></div><button onclick="order(\''+p.name+'\',\''+p.price+'\',\''+p.owner+'\',\''+p.phone+'\')">اطلب بالواتساب</button><button class="call" onclick="window.location.href=\'tel:'+cleanPhone(p.phone)+'\'">📞 اتصل بـ '+p.owner+'</button></div></div>';
 }).join('');
 }
 function order(name,price,owner,phone){var msg=encodeURIComponent('السلام عليكم يا '+owner+'، داير أطلب: '+name+' - السعر: '+price+' جنيه - من AYMAN MARKETING');window.open('https://wa.me/'+cleanPhone(phone)+'?text='+msg,'_blank');}

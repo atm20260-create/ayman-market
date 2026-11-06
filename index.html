@@ -7,102 +7,65 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Tahoma,Arial}
 body{background:#f8f8f8}
-header{background:linear-gradient(135deg,#0a0a0a,#1a1a1a 50%,#2d2d2d);color:#fff;padding:22px 15px 18px;text-align:center;position:sticky;top:0;z-index:10;border-bottom:3px solid #d4af37}
-.logo{display:flex;align-items:center;justify-content:center;gap:12px}
-.logo-mark{width:58px;height:58px;background:linear-gradient(135deg,#d4af37,#f5d76e,#b8860b);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;color:#000;border:2px solid #fff}
-.logo-text{text-align:right}
-.logo-text h1{font-size:28px;letter-spacing:2px;background:linear-gradient(90deg,#d4af37,#fff,#d4af37);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900;line-height:1}
-.logo-text span{font-size:12px;letter-spacing:4px;color:#d4af37}
-header p{font-size:13px;color:#ccc;margin-top:8px}
+header{background:#111;color:#fff;padding:22px 15px;text-align:center;border-bottom:3px solid #d4af37}
+header h1{font-size:28px;color:#d4af37}
+header p{font-size:13px;color:#ccc;margin-top:6px}
 .search{padding:12px}
 .search input{width:100%;padding:13px;border-radius:12px;border:1px solid #ddd;font-size:16px}
-.cats{display:flex;gap:8px;overflow:auto;padding:0 12px 12px;scrollbar-width:none}
+.cats{display:flex;gap:8px;overflow:auto;padding:0 12px 12px}
 .cats button{white-space:nowrap;padding:9px 16px;border-radius:20px;background:#fff;border:1px solid #ddd;cursor:pointer;font-weight:bold}
-.cats button.active{background:#111;color:#d4af37;border-color:#d4af37}
+.cats button.active{background:#111;color:#d4af37}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:12px}
 .card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 3px 12px rgba(0,0,0,.08)}
 .card img{width:100%;height:165px;object-fit:cover;background:#f0f0f0}
 .card .info{padding:12px}
 .card h3{font-size:15px;line-height:1.4;min-height:42px}
 .card .price{color:#b8860b;font-weight:900;margin:6px 0;font-size:18px}
-.cash{color:#d32f2f;font-weight:bold;font-size:13px;background:#ffebee;padding:5px 8px;border-radius:6px;display:inline-block;margin-bottom:6px}
-.owner{background:#fff8e1;border:1px solid #ffe082;padding:8px;border-radius:8px;font-size:13px;margin:6px 0;line-height:1.6}
-.owner b{color:#111}
+.cash{color:#d32f2f;font-weight:bold;font-size:13px;background:#ffebee;padding:5px 8px;border-radius:6px;display:inline-block}
+.owner{background:#fff8e1;border:1px solid #ffe082;padding:8px;border-radius:8px;font-size:13px;margin:8px 0;line-height:1.6}
 .card button{width:100%;padding:11px;border:none;border-radius:9px;background:#25D366;color:#fff;font-size:15px;cursor:pointer;font-weight:bold;margin-top:5px}
 .card button.call{background:#111;color:#d4af37}
-.card button.del{background:#fff;color:#ff3b30;border:1px solid #ff3b30}
-.section-title{padding:12px 12px 0;font-size:18px;font-weight:900}
-.addbox{background:#fff;margin:12px;padding:16px;border-radius:14px;border:1px solid #eee}
-.addbox h3{margin-bottom:8px}
-.addbox label{font-size:13px;font-weight:bold;display:block;margin:8px 0 4px}
-.addbox input,.addbox select{width:100%;padding:12px;margin-bottom:5px;border-radius:9px;border:1px solid #ddd;font-size:15px}
-.addbox .save{width:100%;padding:13px;background:#111;color:#d4af37;border:none;border-radius:9px;font-size:16px;font-weight:900;cursor:pointer;margin-top:10px}
-.addbox .clear{width:100%;padding:10px;background:#fff;color:#ff3b30;border:1px solid #ff3b30;border-radius:9px;margin-top:8px;cursor:pointer}
-.preview{width:100%;height:140px;object-fit:cover;border-radius:10px;display:none;margin-top:8px;border:1px solid #ddd}
 .about{background:#111;color:#ddd;margin:12px;padding:18px;border-radius:14px;text-align:center;line-height:1.8;font-size:14px}
 .about b{color:#d4af37}
-footer{background:#000;color:#aaa;text-align:center;padding:14px;font-size:12px;line-height:1.6}
+footer{background:#000;color:#aaa;text-align:center;padding:14px;font-size:12px}
 </style>
 </head>
 <body>
-<header>
-<div class="logo"><div class="logo-mark">AM</div><div class="logo-text"><h1>AYMAN MARKETING</h1><span>محلات الواحة • فوربرنقا</span></div></div>
-<p>ولاعات أصلية • زينة كفرات الركشات • فوربرنقا - السودان</p>
-</header>
-
-<div class="section-title">🔥 بضاعتنا</div>
-<div class="search"><input id="search" placeholder="ابحث عن منتج أو صاحب بضاعة..."></div>
+<header><h1>AYMAN MARKETING</h1><p>محلات الواحة • فوربرنقا • ولاعات أصلية • زينة كفرات الركشات</p></header>
+<div class="search"><input id="search" placeholder="ابحث هنا..." oninput="render()"></div>
 <div class="cats" id="cats"></div>
 <div class="grid" id="grid"></div>
-
-<div class="addbox">
-<h3>➕ نضيف بضاعة جديدة</h3>
-<label>اسم المنتج *</label><input id="pname" placeholder="مثال: زينة كفر ركشة وردية">
-<label>السعر *</label><input id="pprice" type="number" placeholder="مثال: 70000">
-<label>الكمية</label><input id="pqty" type="number" placeholder="مثال: 20">
-<label>صنف البضاعة</label>
-<select id="pcat"><option>ولاعات</option><option>زينة كفرات الركشات</option><option>مواد غذائية</option><option>منظفات</option><option>بقالة</option><option>أخرى</option></select>
-<label>👤 اسم صاحب البضاعة *</label><input id="ownerName" placeholder="مثال: النعمان" value="النعمان">
-<label>📞 رقم صاحب البضاعة *</label><input id="ownerPhone" type="tel" value="+235 85152670">
-<label>🖼️ صورة البضاعة بس</label><input id="pimgFile" type="file" accept="image/*" onchange="previewImage(event)"><img id="preview" class="preview">
-<label>أو رابط صورة البضاعة</label><input id="pimg" placeholder="الصق رابط صورة البضاعة هنا">
-<button class="save" onclick="addProduct()">حفظ البضاعة ✅</button>
-<button class="clear" onclick="clearAll()">مسح كل المنتجات</button>
-<p id="msg" style="text-align:center;color:green;margin-top:8px;font-weight:bold"></p>
-</div>
-
-<div class="about"><b>AYMAN MARKETING - محلات الواحة</b><br>متجر من فوربرنقا - السودان. متخصص في الولاعات وزينة كفرات الركشات.<br><b>المؤسس: أيمن محمد صالح يعقوب - فوربرنقا - السودان</b><br>تم الإنشاء: 05 نوفمبر 2026</div>
+<div class="about"><b>AYMAN MARKETING - محلات الواحة</b><br>متجر من فوربرنقا - السودان<br><b>المؤسس: أيمن محمد صالح يعقوب</b></div>
 <footer>AYMAN MARKETING © 2026 | فوربرنقا - السودان</footer>
-
 <script>
-let tempImg="";
-function previewImage(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=function(ev){tempImg=ev.target.result;let p=document.getElementById('preview');p.src=tempImg;p.style.display='block';};r.readAsDataURL(f);}
-let defaultProducts=[
-{name:"زينة كفر ركشة وردية - نجمة - جديدة",price:70000,qty:10,cat:"زينة كفرات الركشات",img:"wheel-pink.jpg",owner:"النعمان",phone:"+235 85152670",cash:true},
-{name:"زينة كفر ركشة خضراء - نجمة - جديدة",price:70000,qty:10,cat:"زينة كفرات الركشات",img:"wheel-green.jpg",owner:"النعمان",phone:"+235 85152670",cash:true},
-{name:"زينة كفرات ركشة - وردي + أخضر - طقم (قطعتين)",price:140000,qty:5,cat:"زينة كفرات الركشات",img:"wheel-both.jpg",owner:"النعمان",phone:"+235 85152670",cash:true},
-{name:"زينة كفر ركشة - الشكل من الخلف - قاعدة حديد",price:70000,qty:10,cat:"زينة كفرات الركشات",img:"wheel-back.jpg",owner:"النعمان",phone:"+235 85152670",cash:true},
-{name:"ولاعة سوداء - أم كورة حديد",price:4000,qty:20,cat:"ولاعات",img:"black1.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:false},
-{name:"ولاعة سوداء - KENT",price:4000,qty:20,cat:"ولاعات",img:"black2.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:false},
-{name:"ولاعة سوداء سادة طويلة",price:4000,qty:20,cat:"ولاعات",img:"black3.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:false},
-{name:"ولاعة ذهبية - أبو سيفين سمك",price:4000,qty:20,cat:"ولاعات",img:"gold1.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:false},
-{name:"ولاعة ذهبية - كلاش M",price:4000,qty:20,cat:"ولاعات",img:"gold2.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:false},
-{name:"ولاعة ذهبية سادة لماعة",price:4000,qty:20,cat:"ولاعات",img:"gold3.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:false},
-{name:"ولاعة صغيرة - ORIS",price:1000,qty:50,cat:"ولاعات",img:"small1.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:false},
-{name:"ولاعة صغيرة - ZAKI",price:1000,qty:50,cat:"ولاعات",img:"small2.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:false}
+var products=[
+{name:"زينة كفر ركشة وردية - نجمة",price:70000,cat:"زينة كفرات الركشات",img:"wheel-pink.jpg",owner:"النعمان",phone:"+235 85152670",cash:1},
+{name:"زينة كفر ركشة خضراء - نجمة",price:70000,cat:"زينة كفرات الركشات",img:"wheel-green.jpg",owner:"النعمان",phone:"+235 85152670",cash:1},
+{name:"زينة كفرات ركشة - طقم وردي + أخضر",price:140000,cat:"زينة كفرات الركشات",img:"wheel-both.jpg",owner:"النعمان",phone:"+235 85152670",cash:1},
+{name:"زينة كفر ركشة - من الخلف",price:70000,cat:"زينة كفرات الركشات",img:"wheel-back.jpg",owner:"النعمان",phone:"+235 85152670",cash:1},
+{name:"ولاعة سوداء - أم كورة حديد",price:4000,cat:"ولاعات",img:"black1.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:0},
+{name:"ولاعة سوداء - KENT",price:4000,cat:"ولاعات",img:"black2.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:0},
+{name:"ولاعة سوداء سادة طويلة",price:4000,cat:"ولاعات",img:"black3.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:0},
+{name:"ولاعة ذهبية - أبو سيفين سمك",price:4000,cat:"ولاعات",img:"gold1.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:0},
+{name:"ولاعة ذهبية - كلاش M",price:4000,cat:"ولاعات",img:"gold2.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:0},
+{name:"ولاعة ذهبية سادة لماعة",price:4000,cat:"ولاعات",img:"gold3.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:0},
+{name:"ولاعة صغيرة - ORIS",price:1000,cat:"ولاعات",img:"small1.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:0},
+{name:"ولاعة صغيرة - ZAKI",price:1000,cat:"ولاعات",img:"small2.jpg",owner:"أيمن محمد صالح يعقوب",phone:"+235 85152670",cash:0}
 ];
-let products=JSON.parse(localStorage.getItem('ayman_final')||'null');
-if(!products){products=defaultProducts;localStorage.setItem('ayman_final',JSON.stringify(products));}
-let cats=['الكل','زينة كفرات الركشات','ولاعات','مواد غذائية','منظفات','بقالة','أخرى'];let activeCat='الكل';
-function renderCats(){document.getElementById('cats').innerHTML=cats.map(c=>`<button class="${c===activeCat?'active':''}" onclick="setCat('${c}')">${c}</button>`).join('');}
+var cats=['الكل','زينة كفرات الركشات','ولاعات'];
+var activeCat='الكل';
+function renderCats(){document.getElementById('cats').innerHTML=cats.map(function(c){return '<button class="'+(c===activeCat?'active':'')+'" onclick="setCat(\''+c+'\')">'+c+'</button>'}).join('');}
 function setCat(c){activeCat=c;renderCats();render();}
-function cleanPhone(p){return (p||'').replace(/[^0-9]/g,'');}
-function render(){let q=(document.getElementById('search').value||'').trim();let list=products.filter(p=>(activeCat==='الكل'||p.cat===activeCat)&&(p.name.includes(q)||(p.owner||'').includes(q)));document.getElementById('grid').innerHTML=list.length?list.map((p,i)=>`<div class="card">${p.img?`<img src="${p.img}" onerror="this.style.display='none'">`:''}<div class="info"><h3>${p.name}</h3><div>الكمية: ${p.qty}</div><div class="price">${p.price} جنيه</div>${p.cash?'<div class="cash">💵 كاش فقط - ما بنكك</div>':''}<div class="owner">👤 <b>${p.owner}</b><br>📞 <span dir="ltr">${p.phone}</span><br><span style="font-size:11px;color:#666">تعامل مباشرة مع صاحب البضاعة</span></div><button onclick="order('${p.name}','${p.price}','${p.owner}','${p.phone}')">اطلب من صاحب البضاعة بالواتساب</button><button class="call" onclick="window.location.href='tel:${cleanPhone(p.phone)}'">📞 اتصل بـ ${p.owner}</button><button class="del" onclick="deleteOne(${i})">حذف</button></div></div>`).join(''):'<p style="grid-column:1/-1;text-align:center;padding:20px">لا توجد منتجات</p>';}
-function addProduct(){let name=document.getElementById('pname').value.trim();let price=document.getElementById('pprice').value;let qty=document.getElementById('pqty').value||1;let cat=document.getElementById('pcat').value;let owner=document.getElementById('ownerName').value.trim()||'النعمان';let phone=document.getElementById('ownerPhone').value.trim()||'+235 85152670';let img=tempImg||document.getElementById('pimg').value.trim()||'';if(!name||!price){alert('اكتب اسم المنتج والسعر');return;}products.unshift({name,price,qty,cat,img,owner,phone,cash:(cat==='زينة كفرات الركشات')});localStorage.setItem('ayman_final',JSON.stringify(products));document.getElementById('pname').value='';document.getElementById('pprice').value='';document.getElementById('pqty').value='';document.getElementById('pimg').value='';document.getElementById('pimgFile').value='';document.getElementById('preview').style.display='none';tempImg='';document.getElementById('msg').innerText='تم حفظ البضاعة ✅';render();setTimeout(()=>document.getElementById('msg').innerText='',3000);window.scrollTo({top:0,behavior:'smooth'});}
-function deleteOne(i){if(confirm('تحذف البضاعة دي؟')){products.splice(i,1);localStorage.setItem('ayman_final',JSON.stringify(products));render();}}
-function clearAll(){if(confirm('تمسح كل المنتجات؟')){products=[];localStorage.setItem('ayman_final',JSON.stringify(products));render();}}
-function order(name,price,owner,phone){let msg=encodeURIComponent('السلام عليكم يا '+owner+'، داير أطلب: '+name+' - السعر: '+price+' جنيه - كاش فقط - من AYMAN MARKETING');window.open('https://wa.me/'+cleanPhone(phone)+'?text='+msg,'_blank');}
-document.getElementById('search').addEventListener('input',render);renderCats();render();
+function cleanPhone(p){return p.replace(/[^0-9]/g,'');}
+function render(){
+var q=document.getElementById('search').value||'';
+var list=products.filter(function(p){return (activeCat==='الكل'||p.cat===activeCat) && p.name.indexOf(q)>-1;});
+document.getElementById('grid').innerHTML=list.map(function(p){
+return '<div class="card"><img src="'+p.img+'" onerror="this.style.display=\'none\'"><div class="info"><h3>'+p.name+'</h3><div class="price">'+p.price+' جنيه</div>'+(p.cash?'<div class="cash">💵 كاش فقط - ما بنكك</div>':'')+'<div class="owner">👤 <b>'+p.owner+'</b><br>📞 <span dir="ltr">'+p.phone+'</span></div><button onclick="order(\''+p.name+'\',\''+p.price+'\',\''+p.owner+'\',\''+p.phone+'\')">اطلب بالواتساب</button><button class="call" onclick="window.location.href=\'tel:'+cleanPhone(p.phone)+'\'">📞 اتصل بـ '+p.owner+'</button></div></div>';
+}).join('');
+}
+function order(name,price,owner,phone){var msg=encodeURIComponent('السلام عليكم يا '+owner+'، داير أطلب: '+name+' - السعر: '+price+' جنيه - من AYMAN MARKETING');window.open('https://wa.me/'+cleanPhone(phone)+'?text='+msg,'_blank');}
+renderCats();render();
 </script>
 </body>
 </html>

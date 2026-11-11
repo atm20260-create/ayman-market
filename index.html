@@ -20,7 +20,7 @@ body{background:#fff}
 .cats{display:flex;gap:8px;overflow:auto;padding:4px 14px 14px}
 .cats button{padding:10px 20px;border-radius:12px;border:1px solid #eee;background:#f8f8f8;cursor:pointer;font-weight:bold;font-size:14px;white-space:nowrap}
 .cats button.active{background:#0f3d2e;color:#ffc107;border-color:#0f3d2e}
-.grid{padding:0 14px 20px;display:flex;flex-direction:column;gap:14px}
+.grid{padding:0 14px 90px;display:flex;flex-direction:column;gap:14px}
 .card{display:flex;background:#fff;border:1px solid #f0f0f0;border-radius:20px;overflow:hidden;box-shadow:0 3px 14px rgba(0,0,0,.06)}
 .card .img{width:135px;min-height:145px;background:#fff7d6;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
 .card .img img{width:100%;height:100%;object-fit:cover}
@@ -106,34 +106,80 @@ var DEFAULT_PRODUCTS=[
 var merchants=[], products=[];
 try{ var s1=localStorage.getItem('ayman_m_v5'); merchants=s1?JSON.parse(s1):DEFAULT_MERCHANTS; }catch(e){ merchants=DEFAULT_MERCHANTS; }
 try{ var s2=localStorage.getItem('ayman_p_v5'); products=s2?JSON.parse(s2):DEFAULT_PRODUCTS; }catch(e){ products=DEFAULT_PRODUCTS; }
+if(!Array.isArray(merchants)) merchants=DEFAULT_MERCHANTS;
+if(!Array.isArray(products)) products=DEFAULT_PRODUCTS;
 var cats=['الكل','ولاعات','زينة كفرات الركشات','أخرى']; var activeCat='الكل'; var tempImg=''; var editPriceIndex=-1;
-function saveAll(){ try{ localStorage.setItem('ayman_m_v5',JSON.stringify(merchants)); localStorage.setItem('ayman_p_v5',JSON.stringify(products)); }catch(e){} }
+
+/* تنظيف النصوص قبل عرضها في الصفحة (حماية من الأكواد الخبيثة) */
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+/* توحيد الحروف العربية للبحث (أ إ آ = ا ، ة = ه ، ى = ي) وحذف التشكيل */
+function norm(s){ return String(s||'').toLowerCase().replace(/[ً-ٰٟ]/g,'').replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه'); }
+
+function saveAll(){
+  try{ localStorage.setItem('ayman_m_v5',JSON.stringify(merchants)); localStorage.setItem('ayman_p_v5',JSON.stringify(products)); return true; }
+  catch(e){ alert('تعذر حفظ البيانات: مساحة المتصفح ممتلئة. احذف بعض الصور أو البضائع القديمة.'); return false; }
+}
 function cleanPhone(p){ return (p||'').replace(/[^0-9]/g,''); }
-function renderMerchants(){ var sel=document.getElementById('f_merchant'); sel.innerHTML=merchants.map(function(m,i){ return '<option value="'+i+'">'+m.name+'</option>'; }).join(''); }
+function renderMerchants(){ var sel=document.getElementById('f_merchant'); sel.innerHTML=merchants.map(function(m,i){ return '<option value="'+i+'">'+esc(m.name)+'</option>'; }).join(''); }
 function openMerchant(){ document.getElementById('modalMerchant').style.display='block'; }
 function closeMerchant(){ document.getElementById('modalMerchant').style.display='none'; }
-function saveMerchant(){ var name=document.getElementById('m_name').value.trim(); var phone=document.getElementById('m_phone').value.trim(); var address=document.getElementById('m_address').value.trim(); if(!name||!phone){ alert('اكتب الاسم والرقم'); return; } merchants.push({name:name,phone:phone,address:address}); saveAll(); renderMerchants(); closeMerchant(); document.getElementById('m_name').value=''; document.getElementById('m_phone').value=''; document.getElementById('m_address').value=''; }
-function renderCats(){ document.getElementById('cats').innerHTML=cats.map(function(c){return '<button class="'+(c===activeCat?'active':'')+'" onclick="setCat(\''+c+'\')">'+c+'</button>'}).join(''); }
-function setCat(c){ activeCat=c; renderCats(); render(); }
+function saveMerchant(){
+  var name=document.getElementById('m_name').value.trim(); var phone=document.getElementById('m_phone').value.trim(); var address=document.getElementById('m_address').value.trim();
+  if(!name||!phone){ alert('اكتب الاسم والرقم'); return; }
+  if(cleanPhone(phone).length<8){ alert('رقم التاجر غير صحيح'); return; }
+  merchants.push({name:name,phone:phone,address:address}); saveAll(); renderMerchants(); closeMerchant();
+  document.getElementById('m_name').value=''; document.getElementById('m_phone').value=''; document.getElementById('m_address').value='';
+}
+function renderCats(){ document.getElementById('cats').innerHTML=cats.map(function(c,i){return '<button class="'+(c===activeCat?'active':'')+'" onclick="setCat('+i+')">'+esc(c)+'</button>'}).join(''); }
+function setCat(i){ activeCat=cats[i]; renderCats(); render(); }
 function render(){
-  var q=(document.getElementById('search').value||'').trim();
-  var list=products.filter(function(p){ return (activeCat==='الكل'||p.cat===activeCat) && p.name.indexOf(q)>-1; });
+  var q=norm((document.getElementById('search').value||'').trim());
+  var list=products.filter(function(p){ return (activeCat==='الكل'||p.cat===activeCat) && norm(p.name).indexOf(q)>-1; });
   if(list.length===0){ document.getElementById('grid').innerHTML='<div style="background:#fff;padding:30px;border-radius:16px;text-align:center;color:#888">لا توجد بضاعة</div>'; return; }
   document.getElementById('grid').innerHTML=list.map(function(p){
     var realIdx=products.indexOf(p);
-    var imgHtml=p.img?'<img src="'+p.img+'" onerror="this.style.display=\'none\'">':'<div class="emoji">'+(p.emoji||'🛍️')+'</div>';
-    return '<div class="card"><div class="img">'+imgHtml+'</div><div class="info"><span class="tag">'+p.cat+'</span><h3>'+p.name+'</h3><div class="price">'+p.price+' <small>جنيه</small></div>'+(p.cash?'<div class="cash">كاش فقط</div>':'')+'<div class="merchant"><b>'+p.owner+'</b><br><span dir="ltr">'+p.phone+'</span> • '+(p.address||'')+'</div><div class="actions"><button class="btn-wa" onclick="order(\''+p.name+'\',\''+p.price+'\',\''+p.owner+'\',\''+p.phone+'\')">واتساب</button><button class="btn-call" onclick="window.location.href=\'tel:'+cleanPhone(p.phone)+'\'">اتصل</button></div><div class="editrow"><button onclick="openPrice('+realIdx+')">تعديل السعر</button><button onclick="delProduct('+realIdx+')">حذف</button></div></div></div>';
+    var imgHtml=p.img?'<img src="'+esc(p.img)+'" onerror="this.style.display=\'none\'">':'<div class="emoji">'+esc(p.emoji||'🛍️')+'</div>';
+    return '<div class="card"><div class="img">'+imgHtml+'</div><div class="info"><span class="tag">'+esc(p.cat)+'</span><h3>'+esc(p.name)+'</h3><div class="price">'+esc(p.price)+' <small>جنيه</small></div>'+(p.cash?'<div class="cash">كاش فقط</div>':'')+'<div class="merchant"><b>'+esc(p.owner)+'</b><br><span dir="ltr">'+esc(p.phone)+'</span> • '+esc(p.address||'')+'</div><div class="actions"><button class="btn-wa" onclick="order('+realIdx+')">واتساب</button><button class="btn-call" onclick="callP('+realIdx+')">اتصل</button></div><div class="editrow"><button onclick="openPrice('+realIdx+')">تعديل السعر</button><button onclick="delProduct('+realIdx+')">حذف</button></div></div></div>';
   }).join('');
 }
-function order(name,price,owner,phone){ var msg=encodeURIComponent('السلام عليكم يا '+owner+'، داير أطلب: '+name+' - '+price+' جنيه'); window.open('https://wa.me/'+cleanPhone(phone)+'?text='+msg,'_blank'); }
+function order(i){ var p=products[i]; if(!p) return; var msg=encodeURIComponent('السلام عليكم يا '+p.owner+'، داير أطلب: '+p.name+' - '+p.price+' جنيه'); window.open('https://wa.me/'+cleanPhone(p.phone)+'?text='+msg,'_blank'); }
+function callP(i){ var p=products[i]; if(!p) return; window.location.href='tel:+'+cleanPhone(p.phone); }
 function openAdd(){ document.getElementById('modal').style.display='block'; renderMerchants(); }
-function closeAdd(){ document.getElementById('modal').style.display='none'; tempImg=''; document.getElementById('preview').innerHTML='📷 صورة البضاعة'; }
-function onImage(input){ var file=input.files[0]; if(!file) return; var r=new FileReader(); r.onload=function(e){ tempImg=e.target.result; document.getElementById('preview').innerHTML='<img src="'+tempImg+'">'; }; r.readAsDataURL(file); }
-function saveProduct(){ var name=document.getElementById('f_name').value.trim(); var price=document.getElementById('f_price').value.trim(); var cat=document.getElementById('f_cat').value; var mi=document.getElementById('f_merchant').value; var owner=merchants[mi]?merchants[mi].name:''; var phone=merchants[mi]?merchants[mi].phone:''; var address=merchants[mi]?merchants[mi].address:''; var cash=document.getElementById('f_cash').value==='1'?1:0; if(!name||!price||!owner){ alert('اكمل البيانات'); return; } products.unshift({name:name,price:Number(price),cat:cat,img:tempImg,emoji:'🛍️',owner:owner,phone:phone,address:address,cash:cash}); saveAll(); closeAdd(); render(); document.getElementById('f_name').value=''; document.getElementById('f_price').value=''; tempImg=''; }
+function closeAdd(){ document.getElementById('modal').style.display='none'; tempImg=''; document.getElementById('preview').innerHTML='📷 صورة البضاعة'; document.getElementById('fileImg').value=''; }
+
+/* تصغير الصورة قبل حفظها حتى لا تملأ ذاكرة المتصفح */
+function onImage(input){
+  var file=input.files[0]; if(!file) return;
+  var r=new FileReader();
+  r.onload=function(e){
+    var im=new Image();
+    im.onload=function(){
+      var max=700, w=im.width, h=im.height;
+      if(w>max||h>max){ var k=Math.min(max/w,max/h); w=Math.round(w*k); h=Math.round(h*k); }
+      var c=document.createElement('canvas'); c.width=w; c.height=h;
+      c.getContext('2d').drawImage(im,0,0,w,h);
+      tempImg=c.toDataURL('image/jpeg',0.75);
+      document.getElementById('preview').innerHTML='<img src="'+tempImg+'">';
+    };
+    im.onerror=function(){ alert('تعذر قراءة هذه الصورة'); };
+    im.src=e.target.result;
+  };
+  r.readAsDataURL(file);
+}
+function saveProduct(){
+  var name=document.getElementById('f_name').value.trim(); var price=document.getElementById('f_price').value.trim(); var cat=document.getElementById('f_cat').value; var mi=document.getElementById('f_merchant').value;
+  var owner=merchants[mi]?merchants[mi].name:''; var phone=merchants[mi]?merchants[mi].phone:''; var address=merchants[mi]?merchants[mi].address:'';
+  var cash=document.getElementById('f_cash').value==='1'?1:0;
+  if(!name||!price||!owner){ alert('اكمل البيانات'); return; }
+  if(!(Number(price)>0)){ alert('اكتب سعراً صحيحاً'); return; }
+  products.unshift({name:name,price:Number(price),cat:cat,img:tempImg,emoji:'🛍️',owner:owner,phone:phone,address:address,cash:cash});
+  saveAll(); closeAdd(); render();
+  document.getElementById('f_name').value=''; document.getElementById('f_price').value='';
+}
 function delProduct(i){ if(!confirm('تمسح؟')) return; products.splice(i,1); saveAll(); render(); }
 function openPrice(i){ editPriceIndex=i; document.getElementById('priceProdName').innerText=products[i].name; document.getElementById('newPrice').value=products[i].price; document.getElementById('modalPrice').style.display='block'; }
 function closePrice(){ document.getElementById('modalPrice').style.display='none'; }
-function confirmPrice(){ var v=document.getElementById('newPrice').value.trim(); if(!v) return; products[editPriceIndex].price=Number(v); saveAll(); closePrice(); render(); }
+function confirmPrice(){ var v=document.getElementById('newPrice').value.trim(); if(!v||!(Number(v)>0)) return; products[editPriceIndex].price=Number(v); saveAll(); closePrice(); render(); }
 renderMerchants(); renderCats(); render();
 </script>
 </body>

@@ -21,6 +21,7 @@ body{background:#fff}
 .cats button{padding:10px 20px;border-radius:12px;border:1px solid #eee;background:#f8f8f8;cursor:pointer;font-weight:bold;font-size:14px;white-space:nowrap}
 .cats button.active{background:#0f3d2e;color:#ffc107;border-color:#0f3d2e}
 .grid{padding:0 14px 90px;display:flex;flex-direction:column;gap:14px}
+.msg{background:#fff;padding:30px;border-radius:16px;text-align:center;color:#888;border:1px solid #f0f0f0}
 .card{display:flex;background:#fff;border:1px solid #f0f0f0;border-radius:20px;overflow:hidden;box-shadow:0 3px 14px rgba(0,0,0,.06)}
 .card .img{width:135px;min-height:145px;background:#fff7d6;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
 .card .img img{width:100%;height:100%;object-fit:cover}
@@ -40,41 +41,41 @@ body{background:#fff}
 .editrow{display:flex;gap:6px;margin-top:6px}
 .editrow button{flex:1;padding:7px;border:none;background:#f5f5f5;border-radius:9px;cursor:pointer;font-size:11px;color:#777}
 .footer{text-align:center;padding:14px;color:#aaa;font-size:12px}
-.fab{position:fixed;bottom:18px;left:18px;background:#ffc107;color:#0f3d2e;border:none;width:56px;height:56px;border-radius:50%;font-size:28px;font-weight:900;cursor:pointer;box-shadow:0 5px 18px rgba(0,0,0,.3);z-index:20}
+.fab{position:fixed;bottom:18px;left:18px;background:#ffc107;color:#0f3d2e;border:none;width:56px;height:56px;border-radius:50%;font-size:28px;font-weight:900;cursor:pointer;box-shadow:0 5px 18px rgba(0,0,0,.3);z-index:20;display:none}
 .fab2{position:fixed;bottom:18px;right:18px;background:#0f3d2e;color:#ffc107;border:none;padding:0 18px;height:56px;border-radius:28px;font-size:13px;font-weight:900;cursor:pointer;box-shadow:0 5px 18px rgba(0,0,0,.3);z-index:20}
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:30;padding:16px;overflow:auto}
 .modal .box{background:#fff;border-radius:20px;padding:20px;max-width:460px;margin:20px auto}
 .modal h2{margin-bottom:12px;text-align:center}
+.modal p.note{text-align:center;color:#666;font-size:13px;line-height:1.7;margin:8px 0}
 .modal label{font-size:13px;font-weight:bold;display:block;margin:11px 0 5px}
 .modal input,.modal select{width:100%;padding:12px;border:1px solid #ddd;border-radius:12px;font-size:15px}
-.modal .img-preview{width:100%;height:150px;background:#f5f5f5;border:2px dashed #ddd;border-radius:14px;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:36px}
+.modal .img-preview{width:100%;height:150px;background:#f5f5f5;border:2px dashed #ddd;border-radius:14px;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:36px;cursor:pointer}
 .modal .img-preview img{width:100%;height:100%;object-fit:cover}
 .modal .row{display:flex;gap:8px}
-.modal .row button{flex:1;padding:12px;border:none;border-radius:12px;font-weight:900;cursor:pointer;margin-top:16px}
+.modal .row button,.modal .wide{flex:1;padding:12px;border:none;border-radius:12px;font-weight:900;cursor:pointer;margin-top:16px}
+.modal .wide{width:100%}
 .save{background:#0f3d2e;color:#ffc107}
+.save:disabled{opacity:.5}
 .cancel{background:#eee}
+.pend{border:1px solid #eee;border-radius:12px;padding:10px;margin-top:8px;font-size:13px;line-height:1.7}
+.pend .row button{margin-top:8px;padding:8px}
 </style>
 </head>
 <body>
 <div class="top">
 <div class="row">
-<div class="logo-box"><div class="avatar">A</div><h1>AYMAN MARKETING<span>محلات الواحة - فوربرنقا</span></h1></div>
+<div class="logo-box"><div class="avatar">A</div><h1>AYMAN MARKETING<span>سوق تجار فوربرنقا</span></h1></div>
 <div class="loc">📍 فوربرنقا</div>
 </div>
 </div>
 <div class="searchbox"><span>🔍</span><input id="search" placeholder="دور على بضاعة..." oninput="render()"></div>
 <div class="cats" id="cats"></div>
-<div class="grid" id="grid"></div>
+<div class="grid" id="grid"><div class="msg">جاري تحميل البضاعة...</div></div>
 <div class="footer">AYMAN MARKETING • 2026</div>
-<button class="fab" onclick="openAdd()">+</button>
-<button class="fab2" onclick="openMerchant()">+ تاجر</button>
+<button class="fab" id="fabAdd" onclick="openAdd()">+</button>
+<button class="fab2" id="fabAcc" onclick="openAccount()">دخول التجار</button>
 
-<div class="modal" id="modalMerchant"><div class="box"><h2>إضافة تاجر</h2>
-<label>اسم التاجر</label><input id="m_name" placeholder="اسم التاجر">
-<label>رقم التاجر</label><input id="m_phone" placeholder="+235" dir="ltr">
-<label>عنوان التاجر</label><input id="m_address" placeholder="فوربرنقا">
-<div class="row"><button class="save" onclick="saveMerchant()">حفظ</button><button class="cancel" onclick="closeMerchant()">إلغاء</button></div>
-</div></div>
+<div class="modal" id="modalAcc"><div class="box" id="accBox"></div></div>
 
 <div class="modal" id="modal"><div class="box"><h2>إضافة بضاعة</h2>
 <div class="img-preview" id="preview" onclick="document.getElementById('fileImg').click()">📷 صورة البضاعة</div>
@@ -82,105 +83,224 @@ body{background:#fff}
 <label>اسم البضاعة</label><input id="f_name" placeholder="اسم البضاعة">
 <label>السعر</label><input id="f_price" type="number" placeholder="4000">
 <label>القسم</label><select id="f_cat"><option>ولاعات</option><option>زينة كفرات الركشات</option><option>أخرى</option></select>
-<label>التاجر</label><select id="f_merchant"></select>
+<div id="f_merchant_wrap" style="display:none"><label>التاجر</label><select id="f_merchant"></select></div>
 <label>طريقة الدفع</label><select id="f_cash"><option value="0">بنكك + كاش</option><option value="1">كاش فقط</option></select>
-<div class="row"><button class="save" onclick="saveProduct()">حفظ</button><button class="cancel" onclick="closeAdd()">إلغاء</button></div>
+<div class="row"><button class="save" id="btnSaveProd" onclick="saveProduct()">حفظ</button><button class="cancel" onclick="closeAdd()">إلغاء</button></div>
 </div></div>
 
 <div class="modal" id="modalPrice"><div class="box"><h2>تعديل السعر</h2>
-<p id="priceProdName" style="text-align:center;color:#666"></p>
+<p id="priceProdName" class="note"></p>
 <label>السعر الجديد</label><input id="newPrice" type="number">
 <div class="row"><button class="save" onclick="confirmPrice()">حفظ</button><button class="cancel" onclick="closePrice()">إلغاء</button></div>
 </div></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-var DEFAULT_MERCHANTS=[{name:"أيمن محمد صالح يعقوب",phone:"+235 67651851",address:"فوربرنقا - محلات الواحة"},{name:"النعمان",phone:"+235 85152670",address:"فوربرنقا - محلات النعمان"}];
-var DEFAULT_PRODUCTS=[
-{name:"زينة كفر ركشة وردية - نجمة",price:70000,cat:"زينة كفرات الركشات",img:"",emoji:"🌸",owner:"النعمان",phone:"+235 85152670",address:"فوربرنقا - محلات النعمان",cash:1},
-{name:"زينة كفر ركشة خضراء - نجمة",price:70000,cat:"زينة كفرات الركشات",img:"",emoji:"🟢",owner:"النعمان",phone:"+235 85152670",address:"فوربرنقا - محلات النعمان",cash:1},
-{name:"زينة كفرات ركشة - طقم وردي + أخضر",price:140000,cat:"زينة كفرات الركشات",img:"",emoji:"🌸🟢",owner:"النعمان",phone:"+235 85152670",address:"فوربرنقا - محلات النعمان",cash:1},
-{name:"ولاعة سوداء - أم كورة حديد",price:4000,cat:"ولاعات",img:"",emoji:"🔥",owner:"أيمن محمد صالح يعقوب",phone:"+235 67651851",address:"فوربرنقا - محلات الواحة",cash:0},
-{name:"ولاعة ذهبية - أبو سيفين سمك",price:4000,cat:"ولاعات",img:"",emoji:"✨",owner:"أيمن محمد صالح يعقوب",phone:"+235 67651851",address:"فوربرنقا - محلات الواحة",cash:0},
-{name:"ولاعة صغيرة - ORIS",price:1000,cat:"ولاعات",img:"",emoji:"🔥",owner:"أيمن محمد صالح يعقوب",phone:"+235 67651851",address:"فوربرنقا - محلات الواحة",cash:0}
-];
-var merchants=[], products=[];
-try{ var s1=localStorage.getItem('ayman_m_v5'); merchants=s1?JSON.parse(s1):DEFAULT_MERCHANTS; }catch(e){ merchants=DEFAULT_MERCHANTS; }
-try{ var s2=localStorage.getItem('ayman_p_v5'); products=s2?JSON.parse(s2):DEFAULT_PRODUCTS; }catch(e){ products=DEFAULT_PRODUCTS; }
-if(!Array.isArray(merchants)) merchants=DEFAULT_MERCHANTS;
-if(!Array.isArray(products)) products=DEFAULT_PRODUCTS;
-var cats=['الكل','ولاعات','زينة كفرات الركشات','أخرى']; var activeCat='الكل'; var tempImg=''; var editPriceIndex=-1;
+var SUPABASE_URL='https://rlohjvbtevgbmfzmvfdc.supabase.co';
+var SUPABASE_KEY='sb_publishable_JFaUISKJ2F2zqnme3BDsUA_QPOs3HTf';
+var sb=null;
+try{ sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY); }catch(e){}
 
-/* تنظيف النصوص قبل عرضها في الصفحة (حماية من الأكواد الخبيثة) */
+var products=[], allMerchants=[], pendingList=[];
+var user=null, myMerchant=null, isAdmin=false;
+var cats=['الكل','ولاعات','زينة كفرات الركشات','أخرى']; var activeCat='الكل';
+var tempBlob=null, tempPreview='', editPriceIndex=-1;
+
 function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
-/* توحيد الحروف العربية للبحث (أ إ آ = ا ، ة = ه ، ى = ي) وحذف التشكيل */
 function norm(s){ return String(s||'').toLowerCase().replace(/[ً-ٰٟ]/g,'').replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه'); }
-
-function saveAll(){
-  try{ localStorage.setItem('ayman_m_v5',JSON.stringify(merchants)); localStorage.setItem('ayman_p_v5',JSON.stringify(products)); return true; }
-  catch(e){ alert('تعذر حفظ البيانات: مساحة المتصفح ممتلئة. احذف بعض الصور أو البضائع القديمة.'); return false; }
-}
 function cleanPhone(p){ return (p||'').replace(/[^0-9]/g,''); }
-function renderMerchants(){ var sel=document.getElementById('f_merchant'); sel.innerHTML=merchants.map(function(m,i){ return '<option value="'+i+'">'+esc(m.name)+'</option>'; }).join(''); }
-function openMerchant(){ document.getElementById('modalMerchant').style.display='block'; }
-function closeMerchant(){ document.getElementById('modalMerchant').style.display='none'; }
-function saveMerchant(){
-  var name=document.getElementById('m_name').value.trim(); var phone=document.getElementById('m_phone').value.trim(); var address=document.getElementById('m_address').value.trim();
-  if(!name||!phone){ alert('اكتب الاسم والرقم'); return; }
-  if(cleanPhone(phone).length<8){ alert('رقم التاجر غير صحيح'); return; }
-  merchants.push({name:name,phone:phone,address:address}); saveAll(); renderMerchants(); closeMerchant();
-  document.getElementById('m_name').value=''; document.getElementById('m_phone').value=''; document.getElementById('m_address').value='';
+function $(id){ return document.getElementById(id); }
+function canManage(p){ return isAdmin || (myMerchant && myMerchant.status==='approved' && p.merchant_id===myMerchant.id); }
+function canAdd(){ return isAdmin || (myMerchant && myMerchant.status==='approved'); }
+
+/* ---------- تحميل البيانات ---------- */
+async function loadProducts(){
+  if(!sb){ $('grid').innerHTML='<div class="msg">تعذر تحميل مكتبة الموقع. تأكد من الإنترنت ثم أعد فتح الصفحة.</div>'; return; }
+  var r=await sb.from('products').select('*, merchants(name,phone,address)').order('created_at',{ascending:false});
+  if(r.error){ $('grid').innerHTML='<div class="msg">تعذر تحميل البضاعة. تأكد من الإنترنت ثم أعد المحاولة.<br><br><button class="save" style="padding:10px 18px;border:none;border-radius:10px;font-weight:900" onclick="loadProducts()">إعادة المحاولة</button></div>'; return; }
+  products=r.data||[]; render();
 }
-function renderCats(){ document.getElementById('cats').innerHTML=cats.map(function(c,i){return '<button class="'+(c===activeCat?'active':'')+'" onclick="setCat('+i+')">'+esc(c)+'</button>'}).join(''); }
+async function refreshUser(){
+  if(!sb) return;
+  var s=await sb.auth.getSession(); user=(s.data&&s.data.session)?s.data.session.user:null;
+  myMerchant=null; isAdmin=false; allMerchants=[]; pendingList=[];
+  if(user){
+    var a=await sb.from('merchants').select('*').eq('user_id',user.id).maybeSingle(); myMerchant=a.data||null;
+    var b=await sb.rpc('is_admin'); isAdmin=(b.data===true);
+    if(isAdmin){
+      var c=await sb.from('merchants').select('*').order('created_at',{ascending:true}); allMerchants=c.data||[];
+      pendingList=allMerchants.filter(function(m){ return m.status==='pending'; });
+    }
+  }
+  $('fabAcc').textContent=user?'حسابي':'دخول التجار';
+  $('fabAdd').style.display=canAdd()?'block':'none';
+  render();
+}
+
+/* ---------- عرض البضاعة ---------- */
+function renderCats(){ $('cats').innerHTML=cats.map(function(c,i){return '<button class="'+(c===activeCat?'active':'')+'" onclick="setCat('+i+')">'+esc(c)+'</button>'}).join(''); }
 function setCat(i){ activeCat=cats[i]; renderCats(); render(); }
 function render(){
-  var q=norm((document.getElementById('search').value||'').trim());
+  var q=norm(($('search').value||'').trim());
   var list=products.filter(function(p){ return (activeCat==='الكل'||p.cat===activeCat) && norm(p.name).indexOf(q)>-1; });
-  if(list.length===0){ document.getElementById('grid').innerHTML='<div style="background:#fff;padding:30px;border-radius:16px;text-align:center;color:#888">لا توجد بضاعة</div>'; return; }
-  document.getElementById('grid').innerHTML=list.map(function(p){
-    var realIdx=products.indexOf(p);
-    var imgHtml=p.img?'<img src="'+esc(p.img)+'" onerror="this.style.display=\'none\'">':'<div class="emoji">'+esc(p.emoji||'🛍️')+'</div>';
-    return '<div class="card"><div class="img">'+imgHtml+'</div><div class="info"><span class="tag">'+esc(p.cat)+'</span><h3>'+esc(p.name)+'</h3><div class="price">'+esc(p.price)+' <small>جنيه</small></div>'+(p.cash?'<div class="cash">كاش فقط</div>':'')+'<div class="merchant"><b>'+esc(p.owner)+'</b><br><span dir="ltr">'+esc(p.phone)+'</span> • '+esc(p.address||'')+'</div><div class="actions"><button class="btn-wa" onclick="order('+realIdx+')">واتساب</button><button class="btn-call" onclick="callP('+realIdx+')">اتصل</button></div><div class="editrow"><button onclick="openPrice('+realIdx+')">تعديل السعر</button><button onclick="delProduct('+realIdx+')">حذف</button></div></div></div>';
+  if(list.length===0){ $('grid').innerHTML='<div class="msg">لا توجد بضاعة</div>'; return; }
+  $('grid').innerHTML=list.map(function(p){
+    var idx=products.indexOf(p), m=p.merchants||{};
+    var imgHtml=p.img_url?'<img src="'+esc(p.img_url)+'" loading="lazy" onerror="this.style.display=\'none\'">':'<div class="emoji">'+esc(p.emoji||'🛍️')+'</div>';
+    var edit=canManage(p)?'<div class="editrow"><button onclick="openPrice('+idx+')">تعديل السعر</button><button onclick="delProduct('+idx+')">حذف</button></div>':'';
+    return '<div class="card"><div class="img">'+imgHtml+'</div><div class="info"><span class="tag">'+esc(p.cat)+'</span><h3>'+esc(p.name)+'</h3><div class="price">'+esc(Number(p.price).toLocaleString('en-US'))+' <small>جنيه</small></div>'+(p.cash?'<div class="cash">كاش فقط</div>':'')+'<div class="merchant"><b>'+esc(m.name||'')+'</b><br><span dir="ltr">'+esc(m.phone||'')+'</span> • '+esc(m.address||'')+'</div><div class="actions"><button class="btn-wa" onclick="order('+idx+')">واتساب</button><button class="btn-call" onclick="callP('+idx+')">اتصل</button></div>'+edit+'</div></div>';
   }).join('');
 }
-function order(i){ var p=products[i]; if(!p) return; var msg=encodeURIComponent('السلام عليكم يا '+p.owner+'، داير أطلب: '+p.name+' - '+p.price+' جنيه'); window.open('https://wa.me/'+cleanPhone(p.phone)+'?text='+msg,'_blank'); }
-function callP(i){ var p=products[i]; if(!p) return; window.location.href='tel:+'+cleanPhone(p.phone); }
-function openAdd(){ document.getElementById('modal').style.display='block'; renderMerchants(); }
-function closeAdd(){ document.getElementById('modal').style.display='none'; tempImg=''; document.getElementById('preview').innerHTML='📷 صورة البضاعة'; document.getElementById('fileImg').value=''; }
+function order(i){ var p=products[i]; if(!p) return; var m=p.merchants||{}; var msg=encodeURIComponent('السلام عليكم يا '+(m.name||'')+'، داير أطلب: '+p.name+' - '+p.price+' جنيه'); window.open('https://wa.me/'+cleanPhone(m.phone)+'?text='+msg,'_blank'); }
+function callP(i){ var p=products[i]; if(!p||!p.merchants) return; window.location.href='tel:+'+cleanPhone(p.merchants.phone); }
 
-/* تصغير الصورة قبل حفظها حتى لا تملأ ذاكرة المتصفح */
+/* ---------- الحساب ---------- */
+function openAccount(){ renderAccount(); $('modalAcc').style.display='block'; }
+function closeAccount(){ $('modalAcc').style.display='none'; }
+function renderAccount(){
+  var h='';
+  if(!user){
+    h='<h2>دخول التجار</h2><p class="note">ادخل بحسابك، أو أنشئ حساباً جديداً ثم سجّل بياناتك كتاجر.</p>'
+     +'<label>البريد الإلكتروني</label><input id="a_email" type="email" dir="ltr" placeholder="name@email.com">'
+     +'<label>كلمة المرور (6 أحرف على الأقل)</label><input id="a_pass" type="password" dir="ltr">'
+     +'<div class="row"><button class="save" onclick="doLogin()">دخول</button><button class="cancel" onclick="doSignup()">حساب جديد</button></div>'
+     +'<button class="cancel wide" onclick="closeAccount()">إغلاق</button>';
+  }else{
+    h='<h2>حسابي</h2><p class="note" dir="ltr">'+esc(user.email)+'</p>';
+    if(isAdmin){
+      h+='<p class="note"><b>أنت مدير الموقع</b></p><label>طلبات التجار الجدد</label>';
+      if(!pendingList.length) h+='<p class="note">لا توجد طلبات الآن</p>';
+      pendingList.forEach(function(m,i){
+        h+='<div class="pend"><b>'+esc(m.name)+'</b><br><span dir="ltr">'+esc(m.phone)+'</span> • '+esc(m.address||'')+'<div class="row"><button class="save" onclick="setStatus('+i+',\'approved\')">قبول</button><button class="cancel" onclick="setStatus('+i+',\'rejected\')">رفض</button></div></div>';
+      });
+    }else if(!myMerchant){
+      h+='<p class="note">سجّل بيانات محلك وسيراجعها المدير قبل ظهور بضاعتك.</p>'
+       +'<label>اسم التاجر أو المحل</label><input id="r_name">'
+       +'<label>رقم الهاتف</label><input id="r_phone" dir="ltr" placeholder="+235">'
+       +'<label>العنوان</label><input id="r_address" placeholder="فوربرنقا">'
+       +'<button class="save wide" onclick="registerMerchant()">إرسال الطلب</button>';
+    }else if(myMerchant.status==='pending'){
+      h+='<p class="note">طلبك <b>قيد المراجعة</b>. بعد موافقة المدير سيظهر زر (+) لإضافة بضاعتك.</p>';
+    }else if(myMerchant.status==='rejected'){
+      h+='<p class="note">تم رفض الطلب. تواصل مع إدارة السوق.</p>';
+    }else{
+      h+='<p class="note">أهلاً <b>'+esc(myMerchant.name)+'</b> ✅<br>اضغط زر (+) لإضافة بضاعة جديدة.</p>';
+    }
+    h+='<button class="cancel wide" onclick="doLogout()">تسجيل الخروج</button><button class="cancel wide" style="margin-top:8px" onclick="closeAccount()">إغلاق</button>';
+  }
+  $('accBox').innerHTML=h;
+}
+function authError(e){
+  var m=(e&&e.message)||'';
+  if(/invalid login/i.test(m)) return 'البريد أو كلمة المرور غير صحيحة';
+  if(/already registered/i.test(m)) return 'هذا البريد مسجل من قبل، اضغط (دخول)';
+  if(/password/i.test(m)) return 'كلمة المرور يجب ألا تقل عن 6 أحرف';
+  if(/email/i.test(m)) return 'البريد الإلكتروني غير صحيح أو لم يتم تأكيده';
+  return 'تعذر تنفيذ الطلب، حاول مرة أخرى';
+}
+async function doLogin(){
+  var e=$('a_email').value.trim(), p=$('a_pass').value;
+  if(!e||!p){ alert('اكتب البريد وكلمة المرور'); return; }
+  var r=await sb.auth.signInWithPassword({email:e,password:p});
+  if(r.error){ alert(authError(r.error)); return; }
+  await refreshUser(); renderAccount();
+}
+async function doSignup(){
+  var e=$('a_email').value.trim(), p=$('a_pass').value;
+  if(!e||!p){ alert('اكتب البريد وكلمة المرور'); return; }
+  var r=await sb.auth.signUp({email:e,password:p});
+  if(r.error){ alert(authError(r.error)); return; }
+  if(!r.data.session){ alert('تم إنشاء الحساب. افتح بريدك واضغط رابط التأكيد ثم ادخل.'); return; }
+  await refreshUser(); renderAccount();
+}
+async function doLogout(){ await sb.auth.signOut(); await refreshUser(); closeAccount(); }
+async function registerMerchant(){
+  var name=$('r_name').value.trim(), phone=$('r_phone').value.trim(), address=$('r_address').value.trim();
+  if(!name||!phone){ alert('اكتب الاسم والرقم'); return; }
+  if(cleanPhone(phone).length<8){ alert('رقم الهاتف غير صحيح'); return; }
+  var r=await sb.from('merchants').insert({user_id:user.id,name:name,phone:phone,address:address,status:'pending'});
+  if(r.error){ alert('تعذر إرسال الطلب'); return; }
+  await refreshUser(); renderAccount();
+}
+async function setStatus(i,status){
+  var m=pendingList[i]; if(!m) return;
+  var r=await sb.from('merchants').update({status:status}).eq('id',m.id);
+  if(r.error){ alert('تعذر تحديث الطلب'); return; }
+  await refreshUser(); await loadProducts(); renderAccount();
+}
+
+/* ---------- إضافة بضاعة ---------- */
+function openAdd(){
+  if(!canAdd()) return;
+  var w=$('f_merchant_wrap');
+  if(isAdmin){
+    var ok=allMerchants.filter(function(m){ return m.status==='approved'; });
+    $('f_merchant').innerHTML=ok.map(function(m){ return '<option value="'+esc(m.id)+'">'+esc(m.name)+'</option>'; }).join('');
+    w.style.display='block';
+  }else{ w.style.display='none'; }
+  $('modal').style.display='block';
+}
+function closeAdd(){ $('modal').style.display='none'; tempBlob=null; tempPreview=''; $('preview').innerHTML='📷 صورة البضاعة'; $('fileImg').value=''; }
 function onImage(input){
   var file=input.files[0]; if(!file) return;
   var r=new FileReader();
   r.onload=function(e){
     var im=new Image();
     im.onload=function(){
-      var max=700, w=im.width, h=im.height;
+      var max=800,w=im.width,h=im.height;
       if(w>max||h>max){ var k=Math.min(max/w,max/h); w=Math.round(w*k); h=Math.round(h*k); }
-      var c=document.createElement('canvas'); c.width=w; c.height=h;
-      c.getContext('2d').drawImage(im,0,0,w,h);
-      tempImg=c.toDataURL('image/jpeg',0.75);
-      document.getElementById('preview').innerHTML='<img src="'+tempImg+'">';
+      var c=document.createElement('canvas'); c.width=w; c.height=h; c.getContext('2d').drawImage(im,0,0,w,h);
+      c.toBlob(function(b){ tempBlob=b; tempPreview=URL.createObjectURL(b); $('preview').innerHTML='<img src="'+tempPreview+'">'; },'image/jpeg',0.78);
     };
     im.onerror=function(){ alert('تعذر قراءة هذه الصورة'); };
     im.src=e.target.result;
   };
   r.readAsDataURL(file);
 }
-function saveProduct(){
-  var name=document.getElementById('f_name').value.trim(); var price=document.getElementById('f_price').value.trim(); var cat=document.getElementById('f_cat').value; var mi=document.getElementById('f_merchant').value;
-  var owner=merchants[mi]?merchants[mi].name:''; var phone=merchants[mi]?merchants[mi].phone:''; var address=merchants[mi]?merchants[mi].address:'';
-  var cash=document.getElementById('f_cash').value==='1'?1:0;
-  if(!name||!price||!owner){ alert('اكمل البيانات'); return; }
+async function saveProduct(){
+  var name=$('f_name').value.trim(), price=$('f_price').value.trim(), cat=$('f_cat').value, cash=$('f_cash').value==='1';
+  var mid=isAdmin?$('f_merchant').value:(myMerchant&&myMerchant.id);
+  if(!name||!price||!mid){ alert('اكمل البيانات'); return; }
   if(!(Number(price)>0)){ alert('اكتب سعراً صحيحاً'); return; }
-  products.unshift({name:name,price:Number(price),cat:cat,img:tempImg,emoji:'🛍️',owner:owner,phone:phone,address:address,cash:cash});
-  saveAll(); closeAdd(); render();
-  document.getElementById('f_name').value=''; document.getElementById('f_price').value='';
+  var btn=$('btnSaveProd'); btn.disabled=true; btn.textContent='جاري الحفظ...';
+  try{
+    var imgUrl=null;
+    if(tempBlob){
+      var path=user.id+'/'+Date.now()+'-'+Math.random().toString(36).slice(2,8)+'.jpg';
+      var up=await sb.storage.from('product-images').upload(path,tempBlob,{contentType:'image/jpeg'});
+      if(up.error){ alert('تعذر رفع الصورة. سيتم الحفظ بدون صورة.'); }
+      else{ imgUrl=sb.storage.from('product-images').getPublicUrl(path).data.publicUrl; }
+    }
+    var r=await sb.from('products').insert({merchant_id:mid,name:name,price:Number(price),cat:cat,img_url:imgUrl,emoji:'🛍️',cash:cash});
+    if(r.error){ alert('تعذر حفظ البضاعة'); }
+    else{ $('f_name').value=''; $('f_price').value=''; closeAdd(); await loadProducts(); }
+  }catch(e){ alert('حدث خطأ أثناء الحفظ'); }
+  btn.disabled=false; btn.textContent='حفظ';
 }
-function delProduct(i){ if(!confirm('تمسح؟')) return; products.splice(i,1); saveAll(); render(); }
-function openPrice(i){ editPriceIndex=i; document.getElementById('priceProdName').innerText=products[i].name; document.getElementById('newPrice').value=products[i].price; document.getElementById('modalPrice').style.display='block'; }
-function closePrice(){ document.getElementById('modalPrice').style.display='none'; }
-function confirmPrice(){ var v=document.getElementById('newPrice').value.trim(); if(!v||!(Number(v)>0)) return; products[editPriceIndex].price=Number(v); saveAll(); closePrice(); render(); }
-renderMerchants(); renderCats(); render();
+
+/* ---------- تعديل وحذف ---------- */
+async function delProduct(i){
+  var p=products[i]; if(!p||!confirm('تمسح؟')) return;
+  var r=await sb.from('products').delete().eq('id',p.id);
+  if(r.error){ alert('تعذر الحذف'); return; }
+  await loadProducts();
+}
+function openPrice(i){ editPriceIndex=i; $('priceProdName').innerText=products[i].name; $('newPrice').value=products[i].price; $('modalPrice').style.display='block'; }
+function closePrice(){ $('modalPrice').style.display='none'; }
+async function confirmPrice(){
+  var v=$('newPrice').value.trim(); var p=products[editPriceIndex];
+  if(!v||!(Number(v)>0)||!p) return;
+  var r=await sb.from('products').update({price:Number(v)}).eq('id',p.id);
+  if(r.error){ alert('تعذر تعديل السعر'); return; }
+  closePrice(); await loadProducts();
+}
+
+renderCats();
+loadProducts();
+if(sb){
+  refreshUser();
+  sb.auth.onAuthStateChange(function(ev){ setTimeout(function(){ if(ev==='SIGNED_OUT'||ev==='TOKEN_REFRESHED') refreshUser(); },0); });
+}
 </script>
 </body>
 </html>
